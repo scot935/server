@@ -1,5 +1,7 @@
 import Users from "../models/user.model.js";
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
+
 import OTP from "../models/OTP.model.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
