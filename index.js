@@ -1,21 +1,20 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const initRoutes = require("./routes/index");
-const { validateUserMsg } = require("./validations/user.validations");
-const cors = require("cors");
-const { findUserBy } = require("./servise/user.servise");
-const Users = require("./models/user.model");
-require("dotenv").config();
-
+import express, { json } from "express";
+import { connect } from "mongoose";
+import initRoutes from "./routes/index";
+import { validateUserMsg } from "./validations/user.validations";
+import cors from "cors";
+import { findUserBy } from "./servise/user.servise";
+import { updateOne } from "./models/user.model";
+import { configDotenv } from "dotenv";
+configDotenv();
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(express.json());
+app.use(json());
 app.use(cors());
 initRoutes(app);
 
-mongoose
-  .connect(process.env.MONGO_DB_URI)
+connect(process.env.MONGO_DB_URI)
   .then(() => {
     const server = app.listen(port, () => {
       console.log(`Server is running on port ${port}`);
@@ -48,7 +47,7 @@ mongoose
           return;
         }
 
-        const reciverUpdate = await Users.updateOne(
+        const reciverUpdate = await updateOne(
           {
             userName: getSender.userName,
             "freand.userName": getReciver.userName,
@@ -58,7 +57,7 @@ mongoose
           }
         );
 
-        const senderUpdate = await Users.updateOne(
+        const senderUpdate = await updateOne(
           {
             userName: getReciver.userName,
             "freand.userName": getSender.userName,
