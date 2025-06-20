@@ -16,17 +16,18 @@ app.use(cors());
 initRoutes(app);
 
 connect(process.env.MONGO_DB_URI)
-  .then(() => {
+  .then(async () => {
     const server = app.listen(port, () => {
       console.log(`Server is running on port ${port}`);
     });
     console.log("Connected! YOU ARE CONNECTED TO YOUR DATABASE!");
 
     // Set up Socket.IO server
-    const io = require("socket.io")(server, {
-      path: "/chat", // Set the path for Socket.IO
+    const { Server } = await import("socket.io");
+    const io = new Server(server, {
+      path: "/chat",
       cors: {
-        origin: ["https://fronend-urkd.onrender.com", "http://localhost:3000"], // Update this to the origin of your client if different
+        origin: ["https://fronend-urkd.onrender.com", "http://localhost:3000"],
       },
     });
 
