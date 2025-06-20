@@ -1,7 +1,7 @@
-const userRoutes = require("./user.routes").default;
+import userRoutes from "./user.routes.js";
 
 function initRoutes(app) {
   app.use("/api/users", userRoutes);
 }
 
-module.exports = initRoutes;
+export default initRoutes;
