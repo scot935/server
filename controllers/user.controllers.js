@@ -1,4 +1,4 @@
-const {
+import {
   findUserBy,
   createUser,
   getOTP,
@@ -10,18 +10,18 @@ const {
   updateUser,
   deleteFeand,
   unknownPeople,
-} = require("../servise/user.servise");
-const {
+} from "../servise/user.servise.js";
+import {
   validateRegisterInput,
   validateRegisterEmail,
   validateLoginInput,
   validateUserName,
   validateEmail,
   validatePassword,
-} = require("../validations/user.validations");
-const { createVerificationEmail, sendMail } =
-  require("../servise/email.servise").default;
-const bcrypt = require("bcrypt");
+} from "../validations/user.validations.js";
+
+import { createVerificationEmail, sendMail } from "../servise/email.servise.js";
+import { hash } from "bcrypt";
 
 const registerUser = async (req, res) => {
   try {
@@ -39,7 +39,7 @@ const registerUser = async (req, res) => {
         .send({ message: "Email already registered. Choose another email." });
     }
 
-    const hashPassword = await bcrypt.hash(data.password, 10);
+    const hashPassword = await hash(data.password, 10);
 
     data.password = hashPassword;
 
@@ -197,7 +197,7 @@ const editUserAcc = async (req, res) => {
       const { error } = validatePassword({ password: req.body.password });
       if (error)
         return res.status(400).send({ message: error.details[0].message });
-      updates.password = await bcrypt.hash(req.body.password, 10);
+      updates.password = await hash(req.body.password, 10);
     }
 
     if (Object.keys(updates).length > 0) {
@@ -346,7 +346,7 @@ const getUnknownPeople = async (req, res) => {
   }
 };
 
-module.exports = {
+export default {
   registerUser,
   loginUser,
   verifyUser,
