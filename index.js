@@ -4,7 +4,7 @@ import initRoutes from "./routes/index.js";
 import { validateUserMsg } from "./validations/user.validations.js";
 import cors from "cors";
 import { findUserBy } from "./servise/user.servise.js";
-import { updateOne } from "./models/user.model.js";
+import Users from "./models/user.model.js";
 import { configDotenv } from "dotenv";
 configDotenv();
 const app = express();
@@ -47,7 +47,7 @@ connect(process.env.MONGO_DB_URI)
           return;
         }
 
-        const reciverUpdate = await updateOne(
+        const reciverUpdate = await Users.updateOne(
           {
             userName: getSender.userName,
             "freand.userName": getReciver.userName,
@@ -57,7 +57,7 @@ connect(process.env.MONGO_DB_URI)
           }
         );
 
-        const senderUpdate = await updateOne(
+        const senderUpdate = await Users.updateOne(
           {
             userName: getReciver.userName,
             "freand.userName": getSender.userName,
