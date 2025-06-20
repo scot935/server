@@ -1,10 +1,10 @@
 import express, { json } from "express";
 import { connect } from "mongoose";
-import initRoutes from "./routes/index";
-import { validateUserMsg } from "./validations/user.validations";
+import initRoutes from "./routes/index.js";
+import { validateUserMsg } from "./validations/user.validations.js";
 import cors from "cors";
-import { findUserBy } from "./servise/user.servise";
-import { updateOne } from "./models/user.model";
+import { findUserBy } from "./servise/user.servise.js";
+import { updateOne } from "./models/user.model.js";
 import { configDotenv } from "dotenv";
 configDotenv();
 const app = express();
