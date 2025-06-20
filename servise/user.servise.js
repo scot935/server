@@ -1,42 +1,30 @@
-import {
-  findOne,
-  create,
-  findOneAndUpdate,
-  find,
-  deleteOne,
-  findById,
-  updateOne,
-} from "../models/user.model.js";
+import Users from "../models/user.model.js";
 require("dotenv").config();
-import {
-  findOne as _findOne,
-  create as _create,
-  findOneAndDelete,
-} from "../models/OTP.model.js";
+import OTP from "../models/OTP.model.js";
 import { sign } from "jsonwebtoken";
 import { compare } from "bcrypt";
 
-const findUserBy = async (prop, value) => findOne({ [prop]: value });
+const findUserBy = async (prop, value) => Users.findOne({ [prop]: value });
 
 const createUser = async ({ email, userName, password }) => {
   return await create({ userName, email, password });
 };
 
 const getOTP = async (email, purpose) => {
-  const user = await findOne({ email });
+  const user = await Users.findOne({ email });
   if (!user) false;
 
-  const exist = await _findOne({ email, for: purpose });
+  const exist = await OTP.findOne({ email, for: purpose });
   if (exist) false;
 
-  return await _create({ OTP: getCode(), for: purpose, email });
+  return await OTP.create({ OTP: getCode(), for: purpose, email });
 };
 
 const verifyEmail = async (email, otp) => {
-  const verified = await _findOne({ email, OTP: otp, for: "register" });
+  const verified = await OTP.findOne({ email, OTP: otp, for: "register" });
   if (!verified) return false;
 
-  const user = await findOneAndUpdate({ email }, { isVerified: true });
+  const user = await Users.findOneAndUpdate({ email }, { isVerified: true });
 
   const data = {
     email: user.email,
@@ -56,7 +44,7 @@ const verifyEmail = async (email, otp) => {
 };
 
 const login = async (email, password) => {
-  let data = await findOne({ email, isVerified: true });
+  let data = await Users.findOne({ email, isVerified: true });
 
   const comparePassword = await compare(password, data.password);
 
@@ -73,18 +61,23 @@ const login = async (email, password) => {
   };
 };
 
-const allUsers = async (id) => await find({ _id: { $ne: id } });
+const allUsers = async (id) => await Users.find({ _id: { $ne: id } });
 
-const delUser = async (userName) => await deleteOne({ userName: userName });
+const delUser = async (userName) =>
+  await Users.deleteOne({ userName: userName });
 
-const findUserByID = async (id) => await findById(id);
+const findUserByID = async (id) => await Users.findById(id);
 
 const updateUser = async (prop, value, updateFields) =>
-  findOneAndUpdate({ [prop]: value }, { $set: updateFields }, { new: true });
+  Users.findOneAndUpdate(
+    { [prop]: value },
+    { $set: updateFields },
+    { new: true }
+  );
 
 const deleteFeand = async (id, userName) => {
   try {
-    const deleteF = await updateOne(
+    const deleteF = await Users.updateOne(
       { _id: id },
       { $pull: { freand: { userName: userName } } }
     );
@@ -102,10 +95,10 @@ const unknownPeople = async (freandUserNames, id) => {
   try {
     const userNames = freandUserNames.map((user) => user.userName);
 
-    const users = await find({ userName: { $in: userNames } }, "_id");
+    const users = await Users.find({ userName: { $in: userNames } }, "_id");
     const userIds = users.map((user) => user._id);
 
-    return await find({
+    return await Users.find({
       _id: { $nin: [...userIds, id] },
     });
   } catch (error) {
