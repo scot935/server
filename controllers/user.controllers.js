@@ -21,7 +21,7 @@ import {
 } from "../validations/user.validations.js";
 
 import { createVerificationEmail, sendMail } from "../servise/email.servise.js";
-import { hash } from "bcrypt";
+import bcrypt from "bcrypt";
 
 const registerUser = async (req, res) => {
   try {
@@ -39,7 +39,7 @@ const registerUser = async (req, res) => {
         .send({ message: "Email already registered. Choose another email." });
     }
 
-    const hashPassword = await hash(data.password, 10);
+    const hashPassword = await bcrypt.hash(data.password, 10);
 
     data.password = hashPassword;
 

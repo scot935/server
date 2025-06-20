@@ -1,13 +1,13 @@
 import Users from "../models/user.model.js";
 require("dotenv").config();
 import OTP from "../models/OTP.model.js";
-import { sign } from "jsonwebtoken";
-import { compare } from "bcrypt";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 const findUserBy = async (prop, value) => Users.findOne({ [prop]: value });
 
 const createUser = async ({ email, userName, password }) => {
-  return await create({ userName, email, password });
+  return await Users.create({ userName, email, password });
 };
 
 const getOTP = async (email, purpose) => {
@@ -46,7 +46,7 @@ const verifyEmail = async (email, otp) => {
 const login = async (email, password) => {
   let data = await Users.findOne({ email, isVerified: true });
 
-  const comparePassword = await compare(password, data.password);
+  const comparePassword = await bcrypt.compare(password, data.password);
 
   if (!comparePassword) return false;
 
@@ -108,7 +108,7 @@ const unknownPeople = async (freandUserNames, id) => {
 };
 
 let getToken = async (body) =>
-  sign(body, process.env.JWT_SECRET || "", {
+  jwt.sign(body, process.env.JWT_SECRET || "", {
     expiresIn: process.env.JWT_EXPIRY,
   });
 
