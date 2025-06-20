@@ -19,10 +19,8 @@ const {
   validateEmail,
   validatePassword,
 } = require("../validations/user.validations");
-const {
-  createVerificationEmail,
-  sendMail,
-} = require("../servise/email.servise");
+const { createVerificationEmail, sendMail } =
+  require("../servise/email.servise").default;
 const bcrypt = require("bcrypt");
 
 const registerUser = async (req, res) => {
