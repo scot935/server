@@ -5,8 +5,8 @@ import { validateUserMsg } from "./validations/user.validations.js";
 import cors from "cors";
 import { findUserBy } from "./servise/user.servise.js";
 import Users from "./models/user.model.js";
-import { configDotenv } from "dotenv";
-configDotenv();
+import env from "dotenv";
+env.config();
 const app = express();
 const port = process.env.PORT || 5000;
 
