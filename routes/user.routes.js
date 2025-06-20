@@ -12,7 +12,7 @@ import {
   getUserByID,
   deleteFreand,
   getUnknownPeople,
-} from "../controllers/user.controllers";
+} from "../controllers/user.controllers.js";
 
 router.post("/register", registerUser);
 router.post("/verifyUser", verifyUser);
