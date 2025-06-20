@@ -32,7 +32,4 @@ const sendMail = async (email) => {
   }
 };
 
-export default {
-  createVerificationEmail,
-  sendMail,
-};
+export { createVerificationEmail, sendMail };
